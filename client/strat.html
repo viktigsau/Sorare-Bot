@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strat</title>
+
+    <style>
+        body{
+            background-color: rgb(38, 141, 141);
+        }
+
+        a{
+            text-decoration: none;
+            color: white;
+            background-color: rgb(13, 100, 100);
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        pre{
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            color: lightblue;
+            font-size: 1.2em;
+            overflow: auto;
+        }
+    </style>
+
+</head>
+<body>
+    
+    <pre name="script" id="script"></pre>
+    <pre name="output" id="output"></pre>
+
+    <button onclick="Run()">Run</button>
+    <button onclick="Stop()">Stop</button>
+
+    <script>
+        function WriteOut(...args) {
+            const output = document.getElementById('output');
+            output.textContent += args.join(' ');
+            output.textContent += '\n';
+        }
+
+        function ClearOutput() {
+            const output = document.getElementById('output');
+            output.textContent = '';
+        }
+
+        function Run() {
+            if (!confirm('Are you sure you want to run this script?')) return;
+
+            const script = document.getElementById('script').textContent.replace(/console.log/g, 'WriteOut');
+
+            const oldScript = document.getElementById('StratScript');
+
+            if (oldScript) {
+                oldScript.remove();
+            }
+
+            const scriptElement = document.createElement('script');
+
+            scriptElement.id = "StratScript";
+
+            scriptElement.textContent = script;
+
+            ClearOutput();
+
+            WriteOut('Script running...\n');
+
+            document.body.appendChild(scriptElement);
+        };
+
+        function Stop(code=0) {
+            const oldScript = document.getElementById('StratScript');
+
+            if (oldScript) {
+                oldScript.remove();
+                WriteOut(`\nScript stopped with exit code ${code}.`);
+            }
+        }
+
+        const script = document.getElementById('script');
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const strat = urlParams.get('strat');
+
+        const getStratUrl = `/strat?name=${strat}`;
+
+        fetch(getStratUrl)
+        .then(response => response.text())
+        .then(data => {
+            script.textContent = data;
+            WriteOut('Script loaded');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    </script>
+</body>
+</html>

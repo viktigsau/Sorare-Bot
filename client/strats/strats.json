@@ -1,0 +1,7 @@
+[
+    {
+        "name":"test",
+        "description":"A test script",
+        "path":"test.js"
+    }
+]

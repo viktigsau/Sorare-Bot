@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <style>
+        body{
+            background-color: rgb(38, 141, 141);
+        }
+
+        a{
+            text-decoration: none;
+            color: white;
+            background-color: rgb(13, 100, 100);
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Welcome to the home page</h1>
+
+    <div id="strats"></div>
+
+    <script>
+        const strats = document.getElementById('strats');
+        const getStratsUrl = "/get-strats";
+
+        fetch(getStratsUrl)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            data.forEach(strat => {
+                const stratElement = document.createElement('div');
+                stratElement.innerHTML = `
+                    <h2>${strat.name} (${strat.path})</h2>
+                    <p style="display: inline;">${strat.description}</p>
+                    <a href="/strat.html?token=${token}&strat=${strat.path}">View</a>
+                `;
+
+                stratElement.style.border = '1px solid black';
+                stratElement.style.margin = '10px';
+                stratElement.style.padding = '10px';
+                stratElement.style.borderRadius = '5px';
+                stratElement.style.backgroundColor = 'rgb(13, 100, 100)';
+
+                strats.appendChild(stratElement);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    </script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+    </script>
+</body>
+</html>
