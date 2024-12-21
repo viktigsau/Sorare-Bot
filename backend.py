@@ -4,9 +4,17 @@ import requests
 import os
 import bcrypt
 import json
+import webbrowser as browser
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+
+CORS(app)
+
+@app.route('/ping', methods=['GET'])
+def ping():
+    return jsonify({"status": "ok"}), 200
 
 @app.route('/get-strats', methods=['GET'])
 def get_strats():
@@ -46,4 +54,5 @@ for root, _, paths in os.walk('client'):
             return content
 
 if __name__ == '__main__':
+    browser.open(f"file://{os.path.abspath('start.html')}")
     app.run(host='0.0.0.0', port=5000)

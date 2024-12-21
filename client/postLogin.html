@@ -58,6 +58,9 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
+        if (!token) {
+            window.location.href = '/login.html';
+        }
     </script>
 </body>
 </html>

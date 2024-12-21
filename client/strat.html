@@ -28,6 +28,8 @@
         }
     </style>
 
+    <script src="API.js"></script>
+
 </head>
 <body>
     
@@ -44,6 +46,13 @@
             output.textContent += '\n';
         }
 
+        function WriteErr(...args) {
+            console.error(...args);
+            const output = document.getElementById('output');
+            output.textContent += args.join(' ');
+            output.textContent += '\n';
+        }
+
         function ClearOutput() {
             const output = document.getElementById('output');
             output.textContent = '';
@@ -52,7 +61,10 @@
         function Run() {
             if (!confirm('Are you sure you want to run this script?')) return;
 
-            const script = document.getElementById('script').textContent.replace(/console.log/g, 'WriteOut');
+            const script = document.getElementById('script').textContent
+                            .replace(/console.log/g, 'WriteOut')
+                            .replace(/console.warn/g, 'WriteOut')
+                            .replace(/console.error/g, 'WriteErr');
 
             const oldScript = document.getElementById('StratScript');
 
@@ -86,6 +98,10 @@
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
         const strat = urlParams.get('strat');
+
+        if (!token) {
+            window.location.href = '/login.html';
+        }
 
         const getStratUrl = `/strat?name=${strat}`;
 
